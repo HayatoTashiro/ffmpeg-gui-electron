@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Build output
+/dist/
+/build/
+*.log
+npm-debug.log*
+
+# Electron Packager / Builder output
+*.exe
+*.app
+*.dmg
+*.asar
+ffmpeg-gui-win32-*
+ffmpeg-gui-darwin-*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# VSCode settings
+.vscode/
+.idea/
+
+# Env config (if any)
+.env
+
+# Mac resource forks
+._*
+
+# Output archives
+*.zip
+*.tar.gz
