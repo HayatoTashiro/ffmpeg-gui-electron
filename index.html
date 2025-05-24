@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <h1>FFmpeg GUI ツール</h1>
+
     <fieldset>
       <legend>入力と出力</legend>
       <label for="select-input-button">入力ファイル</label>
@@ -46,7 +48,8 @@
 
     <fieldset>
       <legend>映像設定</legend>
-
+      <label for="preset-profile">プリセット</label>
+      <select id="preset-profile"></select>
       <label
         ><input type="checkbox" id="trim-only" />
         時間で切り取るだけ（変換なし）</label
@@ -100,6 +103,7 @@
       </select>
 
       <label for="crf">CRF値</label>
+
       <input type="text" id="crf" value="23" />
     </fieldset>
 
@@ -130,6 +134,14 @@
     </fieldset>
 
     <div style="margin-top: 10px"></div>
+
+    <h3>FFmpegコマンドライン</h3>
+
+    <button
+      onclick="navigator.clipboard.writeText(document.getElementById('command-line').value)"
+    >
+      コピー
+    </button>
     <textarea
       style="display: none"
       rows="3"
