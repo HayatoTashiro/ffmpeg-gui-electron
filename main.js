@@ -55,8 +55,8 @@ ipcMain.on("start-conversion", (event, args) => {
     frameRate,
     preset,
     crf,
-    audioOnly,
-    trimOnly
+
+    trimOnly,
   } = args;
 
   const ext = format === "gif" ? "gif" : format;
@@ -70,7 +70,6 @@ ipcMain.on("start-conversion", (event, args) => {
   if (endTime) ffmpegArgs.push("-to", endTime);
 
   if (!trimOnly) {
-    if (audioOnly && format !== "gif") ffmpegArgs.push("-vn");
     if (resolution) ffmpegArgs.push("-vf", `scale=${resolution}`);
     if (frameRate) ffmpegArgs.push("-r", frameRate);
     if (videoBitrate) ffmpegArgs.push("-b:v", videoBitrate);
@@ -87,7 +86,10 @@ ipcMain.on("start-conversion", (event, args) => {
 
   ffmpegArgs.push(outputFile);
 
-  event.sender.send("ffmpeg-log", "\n実行コマンド:\n" + ["ffmpeg", ...ffmpegArgs].join(" ") + "\n\n");
+  event.sender.send(
+    "ffmpeg-log",
+    "\n実行コマンド:\n" + ["ffmpeg", ...ffmpegArgs].join(" ") + "\n\n"
+  );
 
   const ffmpegProcess = spawn(ffmpeg, ffmpegArgs);
 

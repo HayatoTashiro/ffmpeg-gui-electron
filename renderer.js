@@ -96,17 +96,11 @@ function startConversion() {
     frameRate: getValue("frame-rate"),
     preset: getValue("preset"),
     crf: getValue("crf"),
-    audioOnly: getChecked("audio-only"),
     trimOnly: getChecked("trim-only"),
   });
 }
 
 ipcRenderer.on("ffmpeg-log", (event, log) => {
-  if (log.startsWith("実行コマンド:")) {
-    document.getElementById("command-line").value = log
-      .replace("実行コマンド:", "")
-      .trim();
-  }
   const logBox = document.getElementById("log");
   logBox.innerText += log;
   logBox.scrollTop = logBox.scrollHeight;
@@ -159,3 +153,14 @@ function secondsToHMS(sec) {
   const s = String(sec % 60).padStart(2, "0");
   return `${h}:${m}:${s}`;
 }
+
+document.getElementById("format").addEventListener("change", () => {
+  const format = getValue("format");
+  const isAudio = format === "mp3";
+  ["resolution", "frame-rate", "video-bitrate", "preset", "crf"].forEach(
+    (id) => {
+      const el = document.getElementById(id);
+      if (el) el.disabled = isAudio;
+    }
+  );
+});
