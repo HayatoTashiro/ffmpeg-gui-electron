@@ -1,120 +1,110 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>FFmpeg GUI ツール</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <h3>プリセット</h3>
-    <div class="preset-buttons">
-      <button type="button" onclick="applyPreset('twitter')">Twitter用</button>
-      <button type="button" onclick="applyPreset('youtube')">YouTube用</button>
-      <button type="button" onclick="applyPreset('discord')">Discord用</button>
-      <button type="button" onclick="applyPreset('audio')">音声抽出</button>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <title>FFmpeg GUI Tool</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>FFmpeg GUI ツール</h1>
 
-    <label for="select-input-button">入力ファイル</label>
-    <button id="select-input-button">ファイルを選択</button>
-    <div id="input-path"></div>
+<label for="select-input-button">入力ファイル</label>
+<button id="select-input-button">ファイルを選択</button>
+<div id="input-path"></div>
 
-    <label for="select-output-button">出力フォルダ</label>
-    <button id="select-output-button">フォルダを選択</button>
-    <div id="output-path"></div>
+<label for="select-output-button">出力フォルダ</label>
+<button id="select-output-button">フォルダを選択</button>
+<div id="output-path"></div>
 
-    <label for="output-filename">出力ファイル名（拡張子なし）</label>
-    <input type="text" id="output-filename" placeholder="例: my_clip" />
+<label for="output-filename">出力ファイル名（拡張子除く）</label>
+<input type="text" id="output-filename" placeholder="例: my_video">
 
-    <h3>動画プレビュー</h3>
-    <video id="preview" controls style="max-height: 180px"></video>
+<h3>動画プレビュー</h3>
+<video id="preview" controls></video>
+<div style="display: flex; gap: 8px; margin: 6px 0;">
+  <button onclick="markStart()">ここを開始に設定</button>
+  <button onclick="markEnd()">ここを終了に設定</button>
+</div>
 
-    <div style="display: flex; gap: 8px; margin: 6px 0">
-      <button onclick="markStart()">ここを開始に設定</button>
-      <button onclick="markEnd()">ここを終了に設定</button>
-    </div>
+<label>開始時間</label>
+<div class="time-control">
+  <button type="button" onclick="adjustTime('start-time', -1)">−</button>
+  <input type="text" id="start-time" value="00:00:00">
+  <button type="button" onclick="adjustTime('start-time', 1)">＋</button>
+</div>
 
-    <label>開始時間</label>
-    <div class="time-control">
-      <button type="button" onclick="adjustTime('start-time', -1)">−</button>
-      <input type="text" id="start-time" value="00:00:00" />
-      <button type="button" onclick="adjustTime('start-time', 1)">＋</button>
-    </div>
+<label>終了時間</label>
+<div class="time-control">
+  <button type="button" onclick="adjustTime('end-time', -1)">−</button>
+  <input type="text" id="end-time" value="00:01:00">
+  <button type="button" onclick="adjustTime('end-time', 1)">＋</button>
+</div>
 
-    <label>終了時間</label>
-    <div class="time-control">
-      <button type="button" onclick="adjustTime('end-time', -1)">−</button>
-      <input type="text" id="end-time" value="00:01:00" />
-      <button type="button" onclick="adjustTime('end-time', 1)">＋</button>
-    </div>
+<label for="resolution">解像度</label>
+<input type="text" id="resolution" value="1280x720">
 
-    <label for="resolution">解像度</label>
-    <input type="text" id="resolution" value="1280x720" />
+<label for="format">出力形式</label>
+<select id="format">
+  <option value="mp4">mp4</option>
+  <option value="webm">webm</option>
+  <option value="avi">avi</option>
+  <option value="mov">mov</option>
+  <option value="gif">gif</option>
+  <option value="mp3">mp3</option>
+</select>
 
-    <label for="format">出力形式</label>
-    <select id="format">
-      <option value="mp4">mp4</option>
-      <option value="webm">webm</option>
-      <option value="avi">avi</option>
-      <option value="mov">mov</option>
-    </select>
+<label for="video-bitrate">ビデオビットレート</label>
+<input type="text" id="video-bitrate" value="1500k">
 
-    <label for="video-bitrate">ビデオビットレート</label>
-    <input type="text" id="video-bitrate" value="1500k" />
+<label for="audio-bitrate">オーディオビットレート</label>
+<input type="text" id="audio-bitrate" value="192k">
 
-    <label for="audio-bitrate">オーディオビットレート</label>
-    <input type="text" id="audio-bitrate" value="192k" />
+<label for="audio-channels">オーディオチャンネル数</label>
+<select id="audio-channels">
+  <option value="1">1</option>
+  <option value="2">2</option>
+</select>
 
-    <label for="audio-channels">オーディオチャンネル数</label>
-    <select id="audio-channels">
-      <option value="1">1</option>
-      <option value="2">2</option>
-    </select>
+<label for="sample-rate">サンプルレート</label>
+<select id="sample-rate">
+  <option value="44100">44100</option>
+  <option value="48000">48000</option>
+</select>
 
-    <label for="sample-rate">サンプルレート</label>
-    <select id="sample-rate">
-      <option value="44100">44100</option>
-      <option value="48000">48000</option>
-    </select>
+<label for="frame-rate">フレームレート</label>
+<select id="frame-rate">
+  <option value="24">24</option>
+  <option value="30">30</option>
+  <option value="60">60</option>
+</select>
 
-    <label for="frame-rate">フレームレート</label>
-    <select id="frame-rate">
-      <option value="24">24</option>
-      <option value="30">30</option>
-      <option value="60">60</option>
-    </select>
+<label for="preset">エンコードプリセット</label>
+<select id="preset">
+  <option value="ultrafast">ultrafast</option>
+  <option value="fast">fast</option>
+  <option value="medium" selected>medium</option>
+  <option value="slow">slow</option>
+  <option value="veryslow">veryslow</option>
+</select>
 
-    <label for="preset">エンコードプリセット</label>
-    <select id="preset">
-      <option value="ultrafast">ultrafast</option>
-      <option value="fast">fast</option>
-      <option value="medium">medium</option>
-      <option value="slow">slow</option>
-      <option value="veryslow">veryslow</option>
-    </select>
+<label for="crf">CRF値</label>
+<input type="text" id="crf" value="23">
 
-    <label for="crf">CRF値</label>
-    <input type="text" id="crf" value="23" />
+<div style="margin-top:10px;">
+  <label><input type="checkbox" id="audio-only"> 音声抽出モード</label><br>
+  <label><input type="checkbox" id="trim-only"> 時間で切り取るだけ（変換なし）</label>
+</div>
 
-    <div style="margin-top: 10px">
-      <label><input type="checkbox" id="audio-only" /> 音声抽出モード</label>
-    </div>
+<h3>FFmpegコマンドライン</h3>
+<textarea id="command-line" rows="3" readonly style="width:100%; font-family:monospace; font-size:12px;"></textarea>
 
-    <div>
-      <label
-        ><input type="checkbox" id="trim-only" />
-        時間で切り取るだけ（変換なし）</label
-      >
-    </div>
+<button id="start-button">変換開始</button>
 
-    <label for="custom-args">追加FFmpeg引数</label>
-    <input type="text" id="custom-args" value="" />
+<h3 id="status" style="color:#007acc; font-weight:bold;"></h3>
 
-    <button id="start-button">変換開始</button>
+<h3>変換ログ</h3>
+<div id="log"></div>
 
-    <h3>変換ログ</h3>
-    <div id="status" style="font-weight: bold; color: #007acc"></div>
-    <div id="log"></div>
-
-    <script src="renderer.js"></script>
-  </body>
+<script src="renderer.js"></script>
+</body>
 </html>
