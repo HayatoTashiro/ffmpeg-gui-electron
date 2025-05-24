@@ -22,6 +22,9 @@
     <button id="select-output-button">フォルダを選択</button>
     <div id="output-path"></div>
 
+    <label for="output-filename">出力ファイル名（拡張子なし）</label>
+    <input type="text" id="output-filename" placeholder="例: my_clip" />
+
     <h3>動画プレビュー</h3>
     <video id="preview" controls style="max-height: 180px"></video>
 
@@ -96,12 +99,20 @@
       <label><input type="checkbox" id="audio-only" /> 音声抽出モード</label>
     </div>
 
+    <div>
+      <label
+        ><input type="checkbox" id="trim-only" />
+        時間で切り取るだけ（変換なし）</label
+      >
+    </div>
+
     <label for="custom-args">追加FFmpeg引数</label>
     <input type="text" id="custom-args" value="" />
 
     <button id="start-button">変換開始</button>
 
     <h3>変換ログ</h3>
+    <div id="status" style="font-weight: bold; color: #007acc"></div>
     <div id="log"></div>
 
     <script src="renderer.js"></script>
