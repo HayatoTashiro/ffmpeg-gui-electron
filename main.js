@@ -16,6 +16,11 @@ function createWindow() {
   });
 
   win.loadFile("index.html");
+  win.once("ready-to-show", () => {
+    win.show(); // HTML/CSSが描画準備完了してから表示
+  });
+
+  win.setMenuBarVisibility(false);
 }
 
 app.whenReady().then(() => {
