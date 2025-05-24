@@ -20,11 +20,10 @@ async function selectInput() {
     window.inputFile = result.inputPath;
     window.outputDir = result.defaultOutputDir;
 
-    // 動画プレビュー用に反映
     const video = document.getElementById("preview");
     if (video) {
       video.src = "file://" + result.inputPath;
-      video.load(); // 明示的にロード（任意）
+      video.load();
     }
   }
 }
@@ -47,6 +46,30 @@ function getChecked(id) {
   return el ? el.checked : false;
 }
 
+function setControlsEnabled(enabled) {
+  const ids = [
+    "select-input-button",
+    "select-output-button",
+    "start-time",
+    "end-time",
+    "resolution",
+    "format",
+    "video-bitrate",
+    "audio-bitrate",
+    "audio-channels",
+    "sample-rate",
+    "frame-rate",
+    "preset",
+    "crf",
+    "output-filename",
+    "trim-only",
+  ];
+  ids.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = !enabled;
+  });
+}
+
 function startConversion() {
   if (!window.inputFile || !window.outputDir) {
     alert("入力ファイルと出力フォルダを指定してください。");
@@ -55,6 +78,7 @@ function startConversion() {
 
   document.getElementById("status").innerText = "変換中...";
   document.getElementById("start-button").disabled = true;
+  setControlsEnabled(false);
   document.getElementById("log").innerText = "変換を開始しました...";
 
   ipcRenderer.send("start-conversion", {
@@ -74,28 +98,36 @@ function startConversion() {
     crf: getValue("crf"),
     audioOnly: getChecked("audio-only"),
     trimOnly: getChecked("trim-only"),
-    customArgs: getValue("custom-args"),
   });
 }
 
 ipcRenderer.on("ffmpeg-log", (event, log) => {
+  if (log.startsWith("実行コマンド:")) {
+    document.getElementById("command-line").value = log
+      .replace("実行コマンド:", "")
+      .trim();
+  }
   const logBox = document.getElementById("log");
   logBox.innerText += log;
   logBox.scrollTop = logBox.scrollHeight;
 });
 
 ipcRenderer.on("ffmpeg-done", (event, outputPath) => {
-  const logBox = document.getElementById("log");
   document.getElementById("status").innerText = "";
   document.getElementById("start-button").disabled = false;
+  setControlsEnabled(true);
+  const logBox = document.getElementById("log");
   if (outputPath) {
-    logBox.innerText += `\n変換が完了しました。出力ファイル: ${outputPath}\n`;
+    logBox.innerText += `
+変換が完了しました。出力ファイル: ${outputPath}
+`;
   } else {
-    logBox.innerText += `\nエラーが発生しました。\n`;
+    logBox.innerText += `
+エラーが発生しました。
+`;
   }
 });
 
-// 秒数増減ボタン
 function adjustTime(id, delta) {
   const input = document.getElementById(id);
   let [h, m, s] = (input.value || "00:00:00")
@@ -109,58 +141,6 @@ function adjustTime(id, delta) {
   input.value = `${h}:${m}:${s}`;
 }
 
-function applyPreset(name) {
-  const presets = {
-    twitter: {
-      resolution: "1280x720",
-      "video-bitrate": "2500k",
-      format: "mp4",
-      crf: "28",
-      "audio-only": false,
-    },
-    youtube: {
-      resolution: "1920x1080",
-      "video-bitrate": "5000k",
-      format: "mp4",
-      crf: "23",
-      "audio-only": false,
-    },
-    discord: {
-      resolution: "960x540",
-      "video-bitrate": "1500k",
-      "audio-bitrate": "128k",
-      format: "mp4",
-      crf: "28",
-      "audio-only": false,
-      "audio-channels": "2",
-      "sample-rate": "44100",
-      preset: "fast",
-    },
-    audio: {
-      format: "mp3",
-      "audio-only": true,
-    },
-  };
-
-  const p = presets[name];
-  if (!p) return;
-
-  for (const [key, value] of Object.entries(p)) {
-    if (typeof value === "boolean") {
-      setCheckbox(key, value);
-    } else {
-      set(key, value);
-    }
-  }
-}
-function set(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.value = value;
-}
-function setCheckbox(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.checked = value;
-}
 function markStart() {
   const video = document.getElementById("preview");
   const seconds = Math.floor(video.currentTime);
