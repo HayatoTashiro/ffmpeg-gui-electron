@@ -53,11 +53,14 @@ function startConversion() {
     return;
   }
 
+  document.getElementById("status").innerText = "変換中...";
+  document.getElementById("start-button").disabled = true;
   document.getElementById("log").innerText = "変換を開始しました...";
 
   ipcRenderer.send("start-conversion", {
     inputFile: window.inputFile,
     outputDir: window.outputDir,
+    outputFilename: getValue("output-filename"),
     startTime: getValue("start-time"),
     endTime: getValue("end-time"),
     resolution: getValue("resolution"),
@@ -70,6 +73,7 @@ function startConversion() {
     preset: getValue("preset"),
     crf: getValue("crf"),
     audioOnly: getChecked("audio-only"),
+    trimOnly: getChecked("trim-only"),
     customArgs: getValue("custom-args"),
   });
 }
@@ -82,6 +86,8 @@ ipcRenderer.on("ffmpeg-log", (event, log) => {
 
 ipcRenderer.on("ffmpeg-done", (event, outputPath) => {
   const logBox = document.getElementById("log");
+  document.getElementById("status").innerText = "";
+  document.getElementById("start-button").disabled = false;
   if (outputPath) {
     logBox.innerText += `\n変換が完了しました。出力ファイル: ${outputPath}\n`;
   } else {
