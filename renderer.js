@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("start-button")
     .addEventListener("click", startConversion);
+  populatePresetOptions();
 });
 
 async function selectInput() {
@@ -274,4 +275,22 @@ function getAllPresets() {
   };
 
   return presets;
+}
+
+function populatePresetOptions() {
+  const select = document.getElementById("preset-profile");
+  if (!select) return;
+  select.innerHTML = '<option value="">--プリセットを選択--</option>';
+  const presets = getAllPresets();
+  for (const [key, value] of Object.entries(presets)) {
+    select.innerHTML += `<option value="${key}">${value.name}</option>`;
+  }
+
+  select.addEventListener("change", () => {
+    const key = select.value;
+    const presets = getAllPresets();
+    if (presets[key]) {
+      setPreset(presets[key].config);
+    }
+  });
 }
