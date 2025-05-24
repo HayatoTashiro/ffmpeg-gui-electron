@@ -46,6 +46,13 @@ function getChecked(id) {
   return el ? el.checked : false;
 }
 
+function setPreset(config) {
+  for (const [id, value] of Object.entries(config)) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  }
+}
+
 function setControlsEnabled(enabled) {
   const ids = [
     "select-input-button",
@@ -112,13 +119,9 @@ ipcRenderer.on("ffmpeg-done", (event, outputPath) => {
   setControlsEnabled(true);
   const logBox = document.getElementById("log");
   if (outputPath) {
-    logBox.innerText += `
-変換が完了しました。出力ファイル: ${outputPath}
-`;
+    logBox.innerText += `\n変換が完了しました。出力ファイル: ${outputPath}\n`;
   } else {
-    logBox.innerText += `
-エラーが発生しました。
-`;
+    logBox.innerText += `\nエラーが発生しました。\n`;
   }
 });
 
@@ -164,3 +167,111 @@ document.getElementById("format").addEventListener("change", () => {
     }
   );
 });
+
+function getAllPresets() {
+  const presets = {
+    // Twitter 向けプリセット
+    twitter_hq: {
+      name: "Twitter HQ",
+      config: {
+        resolution: "1280x720",
+        format: "mp4",
+        "video-bitrate": "5000k",
+        "audio-bitrate": "256k",
+        crf: "20",
+        "frame-rate": "60",
+        preset: "slow",
+      },
+    },
+    twitter_mq: {
+      name: "Twitter",
+      config: {
+        resolution: "1280x720",
+        format: "mp4",
+        "video-bitrate": "3000k",
+        "audio-bitrate": "128k",
+        crf: "23",
+        "frame-rate": "30",
+        preset: "medium",
+      },
+    },
+
+    // YouTube 向けプリセット
+    youtube_hq: {
+      name: "YouTube HQ",
+      config: {
+        resolution: "1920x1080",
+        format: "mp4",
+        "video-bitrate": "12000k",
+        "audio-bitrate": "320k",
+        crf: "18",
+        "frame-rate": "60",
+        preset: "slow",
+      },
+    },
+    youtube_mq: {
+      name: "YouTube MQ",
+      config: {
+        resolution: "1280x720",
+        format: "mp4",
+        "video-bitrate": "5000k",
+        "audio-bitrate": "192k",
+        crf: "22",
+        "frame-rate": "30",
+        preset: "medium",
+      },
+    },
+    youtube_lq: {
+      name: "YouTube LQ",
+      config: {
+        resolution: "854x480",
+        format: "mp4",
+        "video-bitrate": "2500k",
+        "audio-bitrate": "128k",
+        crf: "26",
+        "frame-rate": "30",
+        preset: "fast",
+      },
+    },
+
+    // アーカイブ保存（画質重視）
+    archival_hq: {
+      name: "Archival HQ",
+      config: {
+        resolution: "",
+        format: "mp4",
+        "video-bitrate": "",
+        "audio-bitrate": "320k",
+        crf: "16",
+        "frame-rate": "60",
+        preset: "veryslow",
+      },
+    },
+    archival_mq: {
+      name: "Archival MQ",
+      config: {
+        resolution: "",
+        format: "mp4",
+        "video-bitrate": "",
+        "audio-bitrate": "192k",
+        crf: "20",
+        "frame-rate": "30",
+        preset: "slow",
+      },
+    },
+    archival_lq: {
+      name: "Archival LQ",
+      config: {
+        resolution: "",
+        format: "mp4",
+        "video-bitrate": "",
+        "audio-bitrate": "128k",
+        crf: "26",
+        "frame-rate": "30",
+        preset: "medium",
+      },
+    },
+  };
+
+  return presets;
+}
