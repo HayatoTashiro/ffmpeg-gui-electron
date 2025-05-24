@@ -294,3 +294,11 @@ function populatePresetOptions() {
     }
   });
 }
+
+function changePlaybackRate() {
+  const rate = parseFloat(document.getElementById("playback-rate").value);
+  const video = document.getElementById("preview");
+  if (video) {
+    video.playbackRate = rate;
+  }
+}
