@@ -82,12 +82,14 @@
 
       <label for="resolution">解像度</label>
       <select id="resolution">
-        <option value="">元のまま（変えない）</option>
+        <option value="original">元の解像度を使用</option>
         <option value="3840x2160">4K (3840x2160)</option>
+        <option value="2560x1440">2K (2560x1440)</option>
         <option value="1920x1080">FHD (1920x1080)</option>
         <option value="1280x720" selected>HD (1280x720)</option>
         <option value="854x480">SD (854x480)</option>
         <option value="640x360">低解像度 (640x360)</option>
+        <option value="320x240">超低解像度 (320x240)</option>
       </select>
 
       <label for="video-bitrate">ビデオビットレート</label>
@@ -97,8 +99,10 @@
         <option value="1000k">1000k</option>
         <option value="1500k" selected>1500k</option>
         <option value="2000k">2000k</option>
+        <option value="2500k">2500k</option>
         <option value="3000k">3000k</option>
         <option value="5000k">5000k</option>
+        <option value="12000k">12000k</option>
       </select>
 
       <label for="frame-rate">フレームレート</label>
