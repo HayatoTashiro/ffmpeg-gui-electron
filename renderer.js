@@ -162,13 +162,49 @@ function secondsToHMS(sec) {
 
 document.getElementById("format").addEventListener("change", () => {
   const format = getValue("format");
-  const isAudio = format === "mp3";
-  ["resolution", "frame-rate", "video-bitrate", "preset", "crf"].forEach(
-    (id) => {
-      const el = document.getElementById(id);
-      if (el) el.disabled = isAudio;
-    }
-  );
+
+  // 各コントロールの参照
+  const resolutionEl = document.getElementById("resolution");
+  const frameRateEl = document.getElementById("frame-rate");
+  const videoBitrateEl = document.getElementById("video-bitrate");
+  const presetEl = document.getElementById("preset");
+  const crfEl = document.getElementById("crf");
+  const audioBitrate = document.getElementById("audio-bitrate");
+  const audioChannels = document.getElementById("audio-channels");
+  const sampleRate = document.getElementById("sample-rate");
+  const trimOnly = document.getElementById("trim-only");
+
+  if (format === "mp4") {
+    trimOnly.disabled = false;
+    resolutionEl.disabled = false;
+    frameRateEl.disabled = false;
+    videoBitrateEl.disabled = false;
+    presetEl.disabled = false;
+    crfEl.disabled = false;
+    audioBitrate.disabled = false;
+    audioChannels.disabled = false;
+    sampleRate.disabled = false;
+  } else if (format === "gif") {
+    trimOnly.disabled = true;
+    resolutionEl.disabled = false;
+    frameRateEl.disabled = false;
+    videoBitrateEl.disabled = true;
+    presetEl.disabled = true;
+    crfEl.disabled = true;
+    audioBitrate.disabled = true;
+    audioChannels.disabled = true;
+    sampleRate.disabled = true;
+  } else if (format === "mp3") {
+    trimOnly.disabled = true;
+    resolutionEl.disabled = true;
+    frameRateEl.disabled = true;
+    videoBitrateEl.disabled = true;
+    presetEl.disabled = true;
+    crfEl.disabled = true;
+    audioBitrate.disabled = false;
+    audioChannels.disabled = false;
+    sampleRate.disabled = false;
+  }
 });
 
 function getAllPresets() {
