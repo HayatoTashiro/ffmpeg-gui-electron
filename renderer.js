@@ -30,6 +30,16 @@ async function selectInput() {
     window.inputFile = result.inputPath;
     window.outputDir = result.defaultOutputDir;
 
+    // デフォルト出力ファイル名の自動表示
+    const inputBaseName = result.inputPath
+      .split(/[\\/]/)
+      .pop()
+      .split(".")
+      .slice(0, -1)
+      .join(".");
+    document.getElementById("output-filename").value =
+      inputBaseName + "_converted";
+
     const video = document.getElementById("preview");
     if (video) {
       video.src = "file://" + result.inputPath;
