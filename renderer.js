@@ -10,7 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("start-button")
     .addEventListener("click", startConversion);
+
   populatePresetOptions();
+
+  const defaultPresetKey = "youtube_hq";
+  const presets = getAllPresets();
+  if (presets[defaultPresetKey]) {
+    const select = document.getElementById("preset-profile");
+    select.value = defaultPresetKey;
+    setPreset(presets[defaultPresetKey].config);
+  }
 });
 
 async function selectInput() {
@@ -51,7 +60,23 @@ function getChecked(id) {
 function setPreset(config) {
   for (const [id, value] of Object.entries(config)) {
     const el = document.getElementById(id);
-    if (el) el.value = value;
+    if (!el) continue;
+
+    // value が空文字列の場合は「最初のオプション」を選ぶ
+    if (value === "") {
+      if (el.tagName === "SELECT" && el.options.length > 0) {
+        el.selectedIndex = 0; // 先頭を選択
+      } else {
+        el.value = "";
+      }
+    } else {
+      el.value = value;
+    }
+
+    // format を設定したときは change イベントを明示的に発火
+    if (id === "format") {
+      el.dispatchEvent(new Event("change"));
+    }
   }
 }
 
@@ -308,6 +333,30 @@ function getAllPresets() {
         crf: "26",
         "frame-rate": "30",
         preset: "medium",
+      },
+    },
+    gif_standard: {
+      name: "GIF Standard",
+      config: {
+        resolution: "640x360", // 軽量GIF向け解像度
+        format: "gif",
+        "video-bitrate": "", // 無効（GIFはvideo bitrate不要）
+        "audio-bitrate": "", // 無効
+        crf: "25", // 効果なしだが形式統一で残す
+        "frame-rate": "10", // GIF推奨フレームレート
+        preset: "", // エンコードプリセット無効
+      },
+    },
+    audio_mp3: {
+      name: "音声抽出 (MP3)",
+      config: {
+        resolution: "", // 無効
+        format: "mp3",
+        "video-bitrate": "", // 無効
+        "audio-bitrate": "192k", // 高音質
+        crf: "", // 無効
+        "frame-rate": "", // 無効
+        preset: "", // 無効
       },
     },
   };
