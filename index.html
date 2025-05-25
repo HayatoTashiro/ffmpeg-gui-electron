@@ -18,11 +18,7 @@
       <button id="select-output-button">フォルダを選択</button>
       <div id="output-path"></div>
       <label for="output-filename">出力ファイル名（拡張子除く）</label>
-      <input
-        type="text"
-        id="output-filename"
-        placeholder="空欄で「＜入力ファイル名＞‗converted」"
-      />
+      <input type="text" id="output-filename" placeholder="空欄可" />
     </fieldset>
 
     <fieldset>
@@ -63,9 +59,22 @@
     </fieldset>
 
     <fieldset>
-      <legend>映像設定</legend>
+      <legend>プリセットと出力形式</legend>
       <label for="preset-profile">プリセット</label>
       <select id="preset-profile"></select>
+      <label for="format">出力形式</label>
+      <select id="format">
+        <option value="mp4">mp4</option>
+        <option value="webm">webm</option>
+        <option value="avi">avi</option>
+        <option value="mov">mov</option>
+        <option value="gif">gif</option>
+        <option value="mp3">mp3</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>映像設定</legend>
       <label
         ><input type="checkbox" id="trim-only" />
         時間で切り取るだけ（変換なし）</label
@@ -79,16 +88,6 @@
         <option value="1280x720" selected>HD (1280x720)</option>
         <option value="854x480">SD (854x480)</option>
         <option value="640x360">低解像度 (640x360)</option>
-      </select>
-
-      <label for="format">出力形式</label>
-      <select id="format">
-        <option value="mp4">mp4</option>
-        <option value="webm">webm</option>
-        <option value="avi">avi</option>
-        <option value="mov">mov</option>
-        <option value="gif">gif</option>
-        <option value="mp3">mp3</option>
       </select>
 
       <label for="video-bitrate">ビデオビットレート</label>
