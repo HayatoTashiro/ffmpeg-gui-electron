@@ -25,6 +25,7 @@ async function selectInput() {
     if (video) {
       video.src = "file://" + result.inputPath;
       video.load();
+      changePlaybackRate();
     }
   }
 }
