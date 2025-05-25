@@ -72,6 +72,7 @@ function setControlsEnabled(enabled) {
     "crf",
     "output-filename",
     "trim-only",
+    "preset-profile",
   ];
   ids.forEach((id) => {
     const el = document.getElementById(id);
